@@ -1,9 +1,9 @@
 using System;
-using TinyIpc.IO;
 using System.Text;
+using Shouldly;
 using Xunit;
 
-namespace TinyIpc.Tests
+namespace TinyIpc.IO
 {
 	public class TinyMemoryMappedFileTests
 	{
@@ -13,7 +13,7 @@ namespace TinyIpc.Tests
 		[InlineData(" ")]
 		public void Calling_constructor_with_no_name_should_throw(string name)
 		{
-			Assert.Throws<ArgumentException>(() => new TinyMemoryMappedFile(name));
+			Should.Throw<ArgumentException>(() => new TinyMemoryMappedFile(name));
 		}
 
 		[Theory]
@@ -21,7 +21,7 @@ namespace TinyIpc.Tests
 		[InlineData(-1)]
 		public void Calling_constructor_with_invalid_max_file_size_should_throw(long maxFileSize)
 		{
-			Assert.Throws<ArgumentException>(() => new TinyMemoryMappedFile("Test", maxFileSize));
+			Should.Throw<ArgumentException>(() => new TinyMemoryMappedFile("Test", maxFileSize));
 		}
 
 		[Theory]
@@ -36,7 +36,7 @@ namespace TinyIpc.Tests
 
 			file.Write(data);
 
-			Assert.Equal(data, file.Read());
+			file.Read().ShouldBe(data);
 		}
 
 		[Fact]
@@ -44,7 +44,7 @@ namespace TinyIpc.Tests
 		{
 			using var file = new TinyMemoryMappedFile("Test", 4);
 
-			Assert.Throws<ArgumentOutOfRangeException>(() => file.Write(new byte[] { 1, 2, 3, 4, 5 }));
+			Should.Throw<ArgumentOutOfRangeException>(() => file.Write(new byte[] { 1, 2, 3, 4, 5 }));
 		}
 
 		[Theory]
@@ -59,7 +59,7 @@ namespace TinyIpc.Tests
 
 			file.Write(data);
 
-			Assert.Equal(message.Length, file.GetFileSize());
+			file.GetFileSize().ShouldBe(message.Length);
 		}
 
 		[Fact]
@@ -72,22 +72,21 @@ namespace TinyIpc.Tests
 
 			using (var file = new TinyMemoryMappedFile("Test"))
 			{
-				Assert.Equal(0, file.GetFileSize());
+				file.GetFileSize().ShouldBe(0);
 			}
 		}
 
 		[Fact]
 		public void Secondary_instance_keeps_file_alive()
 		{
-			using (var file2 = new TinyMemoryMappedFile("Test"))
-			{
-				using (var file1 = new TinyMemoryMappedFile("Test"))
-				{
-					file1.Write(new byte[] { 1, 2, 3, 4, 5 });
-				}
+			using var file2 = new TinyMemoryMappedFile("Test");
 
-				Assert.Equal(5, file2.GetFileSize());
+			using (var file1 = new TinyMemoryMappedFile("Test"))
+			{
+				file1.Write(new byte[] { 1, 2, 3, 4, 5 });
 			}
+
+			file2.GetFileSize().ShouldBe(5);
 		}
 	}
 }

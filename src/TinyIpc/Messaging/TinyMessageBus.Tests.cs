@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Shouldly;
 using TinyIpc.IO;
-using TinyIpc.Messaging;
 using TinyIpc.Synchronization;
 using Xunit;
 
-namespace TinyIpc.Tests
+namespace TinyIpc.Messaging
 {
 	public class TinyMessageBusTests
 	{
@@ -27,7 +27,7 @@ namespace TinyIpc.Tests
 
 			await messagebus2.ReadAsync();
 
-			Assert.Equal("yes", received);
+			received.ShouldBe("yes");
 		}
 
 		[Fact]
@@ -45,7 +45,7 @@ namespace TinyIpc.Tests
 
 			var buses = new[] { messagebus1, messagebus2 };
 
-			for (int i = 0; i < firstRound; i++)
+			for (var i = 0; i < firstRound; i++)
 			{
 				var messages = Enumerable.Range(0, messagesPerRound).Select(_ => Guid.NewGuid().ToByteArray());
 				await buses[rnd.Next() % buses.Length].PublishAsync(messages);
@@ -56,7 +56,7 @@ namespace TinyIpc.Tests
 
 			buses = new[] { messagebus1, messagebus2, messagebus3 };
 
-			for (int i = 0; i < secondRound; i++)
+			for (var i = 0; i < secondRound; i++)
 			{
 				var messages = Enumerable.Range(0, messagesPerRound).Select(_ => Guid.NewGuid().ToByteArray());
 				await buses[rnd.Next() % buses.Length].PublishAsync(messages);
@@ -68,9 +68,9 @@ namespace TinyIpc.Tests
 			await messagebus3.ReadAsync();
 
 			// Counters should check out
-			Assert.Equal(total * messagesPerRound - messagebus1.MessagesPublished, messagebus1.MessagesReceived);
-			Assert.Equal(total * messagesPerRound - messagebus2.MessagesPublished, messagebus2.MessagesReceived);
-			Assert.Equal(secondRound * messagesPerRound - messagebus3.MessagesPublished, messagebus3.MessagesReceived);
+			messagebus1.MessagesReceived.ShouldBe(total * messagesPerRound - messagebus1.MessagesPublished);
+			messagebus2.MessagesReceived.ShouldBe(total * messagesPerRound - messagebus2.MessagesPublished);
+			messagebus3.MessagesReceived.ShouldBe(secondRound * messagesPerRound - messagebus3.MessagesPublished);
 		}
 
 		[Fact]
@@ -82,14 +82,14 @@ namespace TinyIpc.Tests
 			var waitTimeout = TinyReadWriteLock.DefaultWaitTimeout;
 
 			// Create underlying primitives first so they can be configured
-			var lockMutex = TinyReadWriteLock.CreateMutex(name);
-			var lockSemaphore = TinyReadWriteLock.CreateSemaphore(name, maxReaderCount);
-			var memoryMappedFile = TinyMemoryMappedFile.CreateOrOpenMemoryMappedFile(name, maxFileSize);
-			var eventWaitHandle = TinyMemoryMappedFile.CreateEventWaitHandle(name);
+			using var lockMutex = TinyReadWriteLock.CreateMutex(name);
+			using var lockSemaphore = TinyReadWriteLock.CreateSemaphore(name, maxReaderCount);
+			using var memoryMappedFile = TinyMemoryMappedFile.CreateOrOpenMemoryMappedFile(name, maxFileSize);
+			using var eventWaitHandle = TinyMemoryMappedFile.CreateEventWaitHandle(name);
 
 			// Create the actual message bus
-			var tinyReadWriteLock = new TinyReadWriteLock(lockMutex, lockSemaphore, maxReaderCount, waitTimeout);
-			var tinyMemoryMappedFile = new TinyMemoryMappedFile(memoryMappedFile, eventWaitHandle, maxFileSize, tinyReadWriteLock, disposeLock: true);
+			using var tinyReadWriteLock = new TinyReadWriteLock(lockMutex, lockSemaphore, maxReaderCount, waitTimeout);
+			using var tinyMemoryMappedFile = new TinyMemoryMappedFile(memoryMappedFile, eventWaitHandle, maxFileSize, tinyReadWriteLock, disposeLock: true);
 
 			using var messageBus = new TinyMessageBus(tinyMemoryMappedFile, disposeFile: true);
 			await messageBus.PublishAsync(Encoding.UTF8.GetBytes("lorem"));

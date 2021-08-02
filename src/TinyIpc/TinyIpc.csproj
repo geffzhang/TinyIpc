@@ -1,20 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyTitle>TinyIpc</AssemblyTitle>
-    <TargetFrameworks>net45;netstandard2.0;netcoreapp3.1</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
-    <AssemblyName>TinyIpc</AssemblyName>
-    <PackageId>TinyIpc</PackageId>
+    <TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="protobuf-net" Version="2.4.4" />
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(EnableSourceLink)' == 'true'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  <ItemGroup>
+    <PackageReference Include="protobuf-net" Version="3.0.73" />
   </ItemGroup>
 
 </Project>

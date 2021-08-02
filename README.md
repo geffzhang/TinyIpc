@@ -1,10 +1,11 @@
 # TinyIpc #
 
 [![NuGet](https://img.shields.io/nuget/v/TinyIpc.svg?maxAge=259200)](https://www.nuget.org/packages/TinyIpc/)
+![Build](https://github.com/steamcore/TinyIpc/workflows/Build/badge.svg)
 
 .NET inter process broadcast message bus.
 
-Intended for quick broadcast messaging in desktop applications, it just works.
+Intended for quick broadcast messaging in Windows desktop applications, it just works.
 
 ## Quick introduction ##
 
@@ -18,7 +19,7 @@ Intended for quick broadcast messaging in desktop applications, it just works.
 
 It's easy to use and there is no complicated setup. It is suited for small messages,
 so big messages probably need some other transport mechanism. With high enough
-troughput messages may be lost if receivers are not able to get a read lock before
+throughput messages may be lost if receivers are not able to get a read lock before
 the message timeout is reached.
 
 ## Performance ##
@@ -27,50 +28,24 @@ mapped file and every read operation which is triggered by writes also reads the
 entire file so if performance is important then batch publish several messages
 at once to reduce the amount of reads and writes.
 
+## OS Support ##
+
+Unfortunately TinyIpc only works on Windows because the named primitives that
+are core to this entire solution only works on Windows and throws
+PlatformNotSupportedException on other operating systems by design.
+
+See https://github.com/dotnet/runtime/issues/4370 for more information.
+
 ## Compared to other solutions ##
 
-<table>
-	<tr>
-		<th></th>
-		<th>TinyIPC</th>
-		<th>XDMessaging</th>
-		<th>NVents</th>
-		<th>IpcChannel</th>
-		<th>Named Pipes</th>
-	</tr>
-	<tr>
-		<td>Broadcasting to all listeners</td>
-		<td>&#x2713;</td>
-		<td>&#x2713;</td>
-		<td>&#x2713; (1)</td>
-		<td>&#x2717;</td>
-		<td>&#x2717;</td>
-	</tr>
-	<tr>
-		<td>No master process</td>
-		<td>&#x2713;</td>
-		<td>&#x2713;</td>
-		<td>&#x2713;</td>
-		<td>&#x2717;</td>
-		<td>&#x2717;</td>
-	</tr>
-	<tr>
-		<td>Insensitive to process privilege level</td>
-		<td>&#x2713;</td>
-		<td>&#x2717;</td>
-		<td>&#x2717;</td>
-		<td>&#x2713;</td>
-		<td>&#x2713;</td>
-	</tr>
-	<tr>
-		<td>Entirely in memory</td>
-		<td>&#x2713;</td>
-		<td>&#x2717;</td>
-		<td>&#x2713;</td>
-		<td>&#x2713;</td>
-		<td>&#x2713;</td>
-	</tr>
-</table>
+*This comparison was made in 2014.*
+
+|                                        | TinyIPC  | XDMessaging | NVents       | IpcChannel | Named Pipes |
+|----------------------------------------|----------|-------------|--------------|------------|-------------|
+| Broadcasting to all listeners          | &#x2713; | &#x2713;    | &#x2713; (1) | &#x2717;   | &#x2717;    |
+| No master process                      | &#x2713; | &#x2713;    | &#x2713;     | &#x2717;   | &#x2717;    |
+| Insensitive to process privilege level | &#x2713; | &#x2717;    | &#x2717;     | &#x2713;   | &#x2713;    |
+| Entirely in memory                     | &#x2713; | &#x2717;    | &#x2713;     | &#x2713;   | &#x2713;    |
 
 1 Via SSDP network discovery
 

@@ -2,11 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\TinyIpc\TinyIpc.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
   </ItemGroup>
 
 </Project>

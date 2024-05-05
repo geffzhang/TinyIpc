@@ -2,10 +2,10 @@
   "version": 1,
   "isRoot": true,
   "tools": {
-    "dotnet-format": {
-      "version": "5.1.225507",
+    "messagepack.generator": {
+      "version": "2.5.129",
       "commands": [
-        "dotnet-format"
+        "mpc"
       ]
     }
   }

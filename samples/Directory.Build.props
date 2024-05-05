@@ -2,18 +2,12 @@
 
   <PropertyGroup>
     <Authors>Steamcore</Authors>
-    <Description>.NET inter process broadcast message bus.</Description>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/steamcore/TinyIpc</PackageProjectUrl>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Description>TinyIpc samples</Description>
   </PropertyGroup>
 
   <PropertyGroup>
     <DebugType>embedded</DebugType>
+    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
@@ -22,8 +16,6 @@
 
   <PropertyGroup>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <EnableAOTAnalyzer>true</EnableAOTAnalyzer>
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <AnalysisMode>All</AnalysisMode>
     <AnalysisLevel>8.0</AnalysisLevel>
   </PropertyGroup>

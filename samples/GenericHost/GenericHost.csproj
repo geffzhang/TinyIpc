@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="TinyLogger" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TinyIpc\TinyIpc.csproj" />
+  </ItemGroup>
+
+  <Target Name="GenerateMessagePack" BeforeTargets="CoreCompile" Inputs="@(Compile)" Outputs="$(IntermediateOutputPath)\MessagePack.Generated.cs">
+    <Exec Command="dotnet mpc -input $(MSBuildProjectDirectory) -output $(IntermediateOutputPath)\MessagePack.Generated.cs -resolverName GenericHostGeneratedResolver" />
+    <ItemGroup>
+      <Compile Remove="$(IntermediateOutputPath)\MessagePack.Generated.cs" />
+      <Compile Include="$(IntermediateOutputPath)\MessagePack.Generated.cs" />
+    </ItemGroup>
+  </Target>
+
+</Project>

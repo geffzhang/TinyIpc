@@ -1,11 +1,14 @@
 root = true
 
+# Steamcore .NET library editorconfig
+# dotnet_library_editorconfig_version = 16
+
 [*]
 charset = utf-8
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{csproj,props,targets}]
+[*.{config,csproj,props,targets}]
 indent_style = space
 indent_size = 2
 
@@ -19,6 +22,7 @@ indent_size = 4
 
 [*.cs]
 indent_style = tab
+indent_size = 4
 
 # Microsoft reference documentation
 # https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference?view=vs-2019
@@ -66,6 +70,9 @@ dotnet_code_quality_unused_parameters = all:warning
 
 #### C# Coding Conventions ####
 
+# Namespace preferences
+csharp_style_namespace_declarations = file_scoped:warning
+
 # var preferences
 csharp_style_var_elsewhere = true:warning
 csharp_style_var_for_built_in_types = true:warning
@@ -110,11 +117,21 @@ dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = warning
 dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
 dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
 
+#### Roslynator Options ####
+
+roslynator_accessibility_modifiers = explicit
+
+# Prefer explicit/implicit object creation
+roslynator_object_creation_type_style = implicit_when_type_is_obvious
+
+# Use collection expression for array/collection creation
+roslynator_use_collection_expression = true
+
 #### Analyzer Rules ####
 
 # <EnableNETAnalyzers>true</EnableNETAnalyzers>
-# <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-# <AnalysisLevel>latest</AnalysisLevel>
+# <AnalysisMode>All</AnalysisMode>
+# <AnalysisLevel>7.0</AnalysisLevel>
 
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = none
@@ -123,7 +140,7 @@ dotnet_diagnostic.CA1031.severity = none
 dotnet_diagnostic.CA1040.severity = none
 
 # CA1062: Validate arguments of public methods
-dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.CA1062.severity = warning
 
 # CA1303: Do not pass literals as localized parameters
 dotnet_diagnostic.CA1303.severity = none
@@ -140,8 +157,14 @@ dotnet_diagnostic.CA1711.severity = none
 # CA1716: Identifiers should not match keywords
 dotnet_diagnostic.CA1716.severity = none
 
+# CA1727: Use PascalCase for named placeholders
+dotnet_diagnostic.CA1727.severity = none
+
 # CA2007: Do not directly await a Task
 dotnet_diagnostic.CA2007.severity = none
+
+# CA2229: Implement serialization constructors
+dotnet_diagnostic.CA2229.severity = none
 
 # CA5392: Use DefaultDllImportSearchPaths attribute for P/Invokes
 dotnet_diagnostic.CA5392.severity = none
@@ -150,13 +173,16 @@ dotnet_diagnostic.CA5392.severity = none
 dotnet_diagnostic.CA5394.severity = none
 
 # IDE0005: Remove unnecessary import
-dotnet_diagnostic.IDE0005.severity = suggestion
+dotnet_diagnostic.IDE0005.severity = warning
 
 # IDE0007: Use 'var' instead of explicit type
 dotnet_diagnostic.IDE0007.severity = suggestion
 
 # IDE0008: Use explicit type instead of 'var'
 dotnet_diagnostic.IDE0008.severity = none
+
+# IDE0028: Use collection initializers
+dotnet_diagnostic.IDE0028.severity = warning
 
 # IDE0035: Remove unreachable code
 dotnet_diagnostic.IDE0035.severity = warning
@@ -172,6 +198,15 @@ dotnet_diagnostic.IDE0079.severity = warning
 
 # IDE0080: Remove unnecessary suppression operator
 dotnet_diagnostic.IDE0080.severity = warning
+
+# IDE0300: Collection initialization can be simplified
+dotnet_diagnostic.IDE0300.severity = warning
+
+# IDE0301: Collection initialization can be simplified
+dotnet_diagnostic.IDE0301.severity = warning
+
+# IDE0305: Collection initialization can be simplified
+dotnet_diagnostic.IDE0305.severity = warning
 
 # RCS1018: Add default access modifier
 dotnet_diagnostic.RCS1018.severity = warning
@@ -194,9 +229,6 @@ dotnet_diagnostic.RCS1077.severity = warning
 # RCS1080: Use 'Count/Length' property instead of 'Any' method
 dotnet_diagnostic.RCS1080.severity = warning
 
-# RCS1090: Call 'ConfigureAwait(false)'
-dotnet_diagnostic.RCS1090.severity = none
-
 # RCS1123: Add parentheses according to operator precedence
 dotnet_diagnostic.RCS1123.severity = none
 
@@ -217,3 +249,10 @@ dotnet_diagnostic.RCS1174.severity = warning
 
 # RCS1192: Use regular string literal instead of verbatim string literal
 dotnet_diagnostic.RCS1192.severity = none
+
+# RCS1250: Use implicit/explicit object creation
+dotnet_diagnostic.RCS1250.severity = none
+
+[Program.cs]
+# CA1852: Seal internal types
+dotnet_diagnostic.CA1852.severity = none
